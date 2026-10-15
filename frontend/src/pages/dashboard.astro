@@ -1,0 +1,8 @@
+---
+import Layout from '../layouts/Layout.astro';
+import EmployeeDashboard from '../components/dashboard/EmployeeDashboard';
+---
+
+<Layout title="Dashboard">
+  <EmployeeDashboard client:only="react" />
+</Layout>

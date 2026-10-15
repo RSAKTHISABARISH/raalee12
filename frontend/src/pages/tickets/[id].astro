@@ -1,0 +1,17 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import TicketDetail from '../../components/tickets/TicketDetail';
+
+export function getStaticPaths() {
+  return Array.from({ length: 100 }, (_, i) => ({
+    params: { id: String(i + 1) },
+  }));
+}
+
+const { id } = Astro.params;
+const ticketId = parseInt(id || '1', 10);
+---
+
+<Layout title={`Ticket #${id}`}>
+  <TicketDetail ticketId={ticketId} client:only="react" />
+</Layout>
