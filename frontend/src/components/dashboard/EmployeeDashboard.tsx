@@ -31,6 +31,35 @@ export default function EmployeeDashboard() {
     });
   };
 
+  const getSlaHours = (priority: string) => {
+    switch (priority) {
+      case 'URGENT': return 2;
+      case 'HIGH': return 4;
+      case 'MEDIUM': return 8;
+      case 'LOW': return 24;
+      default: return 8;
+    }
+  };
+
+  const getSlaBadge = (ticket: any) => {
+    const isCompleted = ticket.status === 'RESOLVED' || ticket.status === 'CLOSED';
+    if (isCompleted) {
+      return { text: '✓ Resolved', class: 'bg-emerald-100 text-emerald-800' };
+    }
+    const slaHours = getSlaHours(ticket.priority);
+    const target = new Date(ticket.createdAt).getTime() + slaHours * 3600 * 1000;
+    const remaining = target - Date.now();
+    if (remaining < 0) {
+      return { text: '⚠️ Breached', class: 'bg-red-100 text-red-800 font-bold' };
+    }
+    const mins = Math.floor(remaining / (1000 * 60));
+    const hours = Math.floor(mins / 60);
+    return {
+      text: `${hours > 0 ? `${hours}h ` : ''}${mins % 60}m left`,
+      class: 'bg-sky-100 text-sky-800',
+    };
+  };
+
   const getStatusClass = (status: string) => {
     switch (status) {
       case 'OPEN': return 'status-open';
@@ -58,90 +87,112 @@ export default function EmployeeDashboard() {
       <Sidebar currentPage="dashboard" />
       <main className="lg:ml-64 p-6 lg:p-8">
         {/* Header */}
-        <div className="mb-8">
-          <h1 className="text-2xl font-bold text-white tracking-tight">Welcome back, {user?.name?.split(' ')[0]}</h1>
-          <p className="text-sm text-white/70 mt-1">Here's an overview of your support activity.</p>
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
+          <div>
+            <h1 className="text-2xl font-bold text-white tracking-tight">Welcome back, {user?.name?.split(' ')[0] || 'Employee'}</h1>
+            <p className="text-sm text-white/70 mt-1">Here is an overview of your active support requests and SLA status.</p>
+          </div>
+          <a
+            href="/tickets/create"
+            className="inline-flex items-center gap-2 px-5 py-2.5 bg-white text-[#111111] hover:bg-white/90 text-sm font-semibold rounded-xl shadow-lg transition-all"
+          >
+            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+            </svg>
+            Submit New Incident
+          </a>
         </div>
 
         {loading ? (
           <div className="flex items-center justify-center h-64">
-            <div className="animate-spin h-8 w-8 border-2 border-white border-t-transparent rounded-full"></div>
+            <div className="animate-spin h-8 w-8 border-3 border-white border-t-transparent rounded-full"></div>
           </div>
         ) : (
           <>
             {/* Metric Cards */}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-              <MetricCard label="My Open Tickets" value={tickets.filter(t => t.status === 'OPEN').length} />
-              <MetricCard label="In Progress" value={tickets.filter(t => t.status === 'IN_PROGRESS').length} />
-              <MetricCard label="Resolved" value={tickets.filter(t => t.status === 'RESOLVED' || t.status === 'CLOSED').length} />
-              <MetricCard label="Total Tickets" value={tickets.length} />
+              <MetricCard label="My Open Tickets" value={tickets.filter(t => t.status === 'OPEN').length} sub="Under initial review" />
+              <MetricCard label="In Active Work" value={tickets.filter(t => t.status === 'IN_PROGRESS').length} sub="Technician working" />
+              <MetricCard label="Resolved / Closed" value={tickets.filter(t => t.status === 'RESOLVED' || t.status === 'CLOSED').length} sub="Successfully completed" />
+              <MetricCard label="Total Requests" value={tickets.length} sub="Lifetime submissions" />
             </div>
 
-            {/* Quick Actions */}
-            <div className="mb-8">
-              <a
-                href="/tickets/create"
-                className="inline-flex items-center gap-2 px-5 py-2.5 bg-white text-[#111111] hover:bg-white/90 text-sm font-semibold rounded-lg shadow-md transition-all"
-              >
-                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
-                </svg>
-                Submit New Ticket
-              </a>
-            </div>
-
-            {/* Recent Tickets */}
-            <div className="bg-white/95 backdrop-blur-md rounded-xl border border-white/20 shadow-xl overflow-hidden">
+            {/* Recent Tickets Table */}
+            <div className="bg-white/95 backdrop-blur-md rounded-2xl border border-white/20 shadow-2xl overflow-hidden">
               <div className="px-6 py-4 border-b border-[#E5E5E5] flex items-center justify-between">
-                <h2 className="text-base font-semibold text-[#111111]">Recent Tickets</h2>
-                <a href="/tickets/my" className="text-sm text-[#666666] hover:text-[#111111] transition-colors">
-                  View all →
+                <div>
+                  <h2 className="text-base font-bold text-[#111111]">Recent Support Incidents</h2>
+                  <p className="text-xs text-[#666666]">Track progress and live technician notes</p>
+                </div>
+                <a href="/tickets/my" className="text-xs font-semibold text-[#111111] hover:underline">
+                  View all tickets →
                 </a>
               </div>
               {tickets.length === 0 ? (
                 <div className="px-6 py-16 text-center">
-                  <svg className="mx-auto h-12 w-12 text-[#D4D4D4]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1}>
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M20.25 7.5l-.625 10.632a2.25 2.25 0 01-2.247 2.118H6.622a2.25 2.25 0 01-2.247-2.118L3.75 7.5m8.25 3v6.75m0 0l-3-3m3 3l3-3M3.375 7.5h17.25c.621 0 1.125-.504 1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125z" />
-                  </svg>
-                  <h3 className="mt-4 text-sm font-medium text-[#111111]">No tickets yet</h3>
-                  <p className="mt-1 text-sm text-[#666666]">Get started by submitting your first support ticket.</p>
+                  <h3 className="mt-4 text-sm font-medium text-[#111111]">No tickets submitted yet</h3>
+                  <p className="mt-1 text-xs text-[#666666]">Submit your first IT service request to get assistance.</p>
                   <a
                     href="/tickets/create"
-                    className="inline-flex items-center gap-1.5 mt-4 px-4 py-2 bg-[#111111] text-white text-sm rounded-lg hover:bg-[#333333] transition-all"
+                    className="inline-flex items-center gap-1.5 mt-4 px-4 py-2 bg-[#111111] text-white text-xs font-semibold rounded-lg hover:bg-[#333333] transition-all"
                   >
-                    Create Ticket
+                    + Create Ticket
                   </a>
                 </div>
               ) : (
                 <div className="overflow-x-auto">
-                  <table className="w-full">
+                  <table className="w-full text-left text-sm">
                     <thead>
-                      <tr className="border-b border-[#E5E5E5]">
-                        <th className="text-left px-6 py-3 text-xs font-medium text-[#666666] uppercase tracking-wider">ID</th>
-                        <th className="text-left px-6 py-3 text-xs font-medium text-[#666666] uppercase tracking-wider">Title</th>
-                        <th className="text-left px-6 py-3 text-xs font-medium text-[#666666] uppercase tracking-wider">Priority</th>
-                        <th className="text-left px-6 py-3 text-xs font-medium text-[#666666] uppercase tracking-wider">Status</th>
-                        <th className="text-left px-6 py-3 text-xs font-medium text-[#666666] uppercase tracking-wider">Created</th>
+                      <tr className="border-b border-[#E5E5E5] bg-[#FAFAFA] text-xs font-semibold uppercase tracking-wider text-[#666666]">
+                        <th className="py-3 px-6">Incident</th>
+                        <th className="py-3 px-6">Priority</th>
+                        <th className="py-3 px-6">SLA Status</th>
+                        <th className="py-3 px-6">Status</th>
+                        <th className="py-3 px-6">Created</th>
+                        <th className="py-3 px-6 text-right">Action</th>
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-[#F5F5F5]">
-                      {tickets.slice(0, 5).map((ticket) => (
-                        <tr key={ticket.id} className="hover:bg-[#FAFAFA] transition-colors cursor-pointer" onClick={() => window.location.href = `/tickets/${ticket.id}`}>
-                          <td className="px-6 py-3.5 text-sm text-[#666666]">#{ticket.id}</td>
-                          <td className="px-6 py-3.5 text-sm font-medium text-[#111111]">{ticket.title}</td>
-                          <td className="px-6 py-3.5">
-                            <span className={`inline-flex px-2 py-0.5 text-xs font-medium rounded ${getPriorityClass(ticket.priority)}`}>
-                              {ticket.priority}
-                            </span>
-                          </td>
-                          <td className="px-6 py-3.5">
-                            <span className={`inline-flex px-2 py-0.5 text-xs font-medium rounded ${getStatusClass(ticket.status)}`}>
-                              {formatStatus(ticket.status)}
-                            </span>
-                          </td>
-                          <td className="px-6 py-3.5 text-sm text-[#666666]">{formatDate(ticket.createdAt)}</td>
-                        </tr>
-                      ))}
+                      {tickets.slice(0, 6).map((ticket) => {
+                        const sla = getSlaBadge(ticket);
+                        return (
+                          <tr
+                            key={ticket.id}
+                            className="hover:bg-[#FAFAFA] transition-colors cursor-pointer"
+                            onClick={() => window.location.href = `/tickets/${ticket.id}`}
+                          >
+                            <td className="px-6 py-4 max-w-xs">
+                              <span className="font-semibold text-[#111111] block truncate">
+                                #{ticket.id} — {ticket.title}
+                              </span>
+                              <span className="text-[11px] text-[#888888]">{ticket.category?.replace(/_/g, ' ')}</span>
+                            </td>
+                            <td className="px-6 py-4 whitespace-nowrap">
+                              <span className={`inline-flex px-2.5 py-1 text-xs font-semibold rounded-md ${getPriorityClass(ticket.priority)}`}>
+                                {ticket.priority}
+                              </span>
+                            </td>
+                            <td className="px-6 py-4 whitespace-nowrap">
+                              <span className={`inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-bold ${sla.class}`}>
+                                {sla.text}
+                              </span>
+                            </td>
+                            <td className="px-6 py-4 whitespace-nowrap">
+                              <span className={`inline-flex px-2.5 py-1 text-xs font-semibold rounded-md ${getStatusClass(ticket.status)}`}>
+                                {formatStatus(ticket.status)}
+                              </span>
+                            </td>
+                            <td className="px-6 py-4 text-xs text-[#888888] whitespace-nowrap">
+                              {formatDate(ticket.createdAt)}
+                            </td>
+                            <td className="px-6 py-4 text-right whitespace-nowrap">
+                              <span className="text-xs font-bold text-indigo-600 hover:text-indigo-800">
+                                View Details →
+                              </span>
+                            </td>
+                          </tr>
+                        );
+                      })}
                     </tbody>
                   </table>
                 </div>
@@ -154,11 +205,12 @@ export default function EmployeeDashboard() {
   );
 }
 
-function MetricCard({ label, value }: { label: string; value: number }) {
+function MetricCard({ label, value, sub }: { label: string; value: number; sub?: string }) {
   return (
-    <div className="bg-white/95 backdrop-blur-md rounded-xl border border-white/20 p-5 shadow-xl">
-      <p className="text-xs font-semibold text-[#666666] uppercase tracking-wider">{label}</p>
-      <p className="text-3xl font-bold text-[#111111] mt-2">{value}</p>
+    <div className="bg-white/95 backdrop-blur-md rounded-2xl border border-white/20 p-5 shadow-xl transition-all">
+      <p className="text-xs font-bold text-[#666666] uppercase tracking-wider">{label}</p>
+      <p className="text-3xl font-extrabold text-[#111111] mt-2">{value}</p>
+      {sub && <p className="text-[11px] text-[#888888] mt-1.5">{sub}</p>}
     </div>
   );
 }

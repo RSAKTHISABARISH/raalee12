@@ -34,6 +34,14 @@ function saveDb() {
   fs.writeFileSync(DB_PATH, buffer);
 }
 
+// Ensure schema columns
+try {
+  db.run("ALTER TABLE status_history ADD COLUMN comment TEXT;");
+  saveDb();
+} catch (e) {
+  // column might already exist
+}
+
 // Helper: run a query that returns rows
 function allRows(sql, params = []) {
   const stmt = db.prepare(sql);
@@ -237,7 +245,9 @@ app.post('/api/tickets', authenticate, (req, res) => {
 
   const validCategories = ['HARDWARE', 'NETWORK', 'SOFTWARE', 'ACCOUNT_ACCESS'];
   const validPriorities = ['LOW', 'MEDIUM', 'HIGH', 'URGENT'];
-  const cat = (category || '').toUpperCase().replace(/-/g, '_');
+  let cat = (category || '').toUpperCase().replace(/-/g, '_');
+  if (cat === 'ACCESS_RIGHTS') cat = 'ACCOUNT_ACCESS';
+  if (cat === 'OTHER') cat = 'SOFTWARE';
   const pri = (priority || '').toUpperCase();
 
   if (!validCategories.includes(cat)) {
@@ -258,8 +268,8 @@ app.post('/api/tickets', authenticate, (req, res) => {
 
   // Record initial status in history
   runStmt(
-    `INSERT INTO status_history (ticket_id, changed_by, old_status, new_status, changed_at)
-     VALUES (?, ?, NULL, 'OPEN', ?)`,
+    `INSERT INTO status_history (ticket_id, changed_by, old_status, new_status, changed_at, comment)
+     VALUES (?, ?, NULL, 'OPEN', ?, 'Initial ticket submission')`,
     [ticket.id, req.currentUser.id, now]
   );
 
@@ -346,18 +356,45 @@ app.get('/api/tickets/:id', authenticate, (req, res) => {
   res.json(ticketToDTO(ticket));
 });
 
-// Update ticket (PATCH)
-app.patch('/api/tickets/:id', authenticate, (req, res) => {
-  if (req.currentUser.role !== 'TECHNICIAN') {
-    return res.status(403).json({ error: 'Access denied: only technicians can update tickets' });
-  }
-
+// Add comment to ticket
+app.post('/api/tickets/:id/comments', authenticate, (req, res) => {
   const ticket = getRow('SELECT * FROM tickets WHERE id = ?', [req.params.id]);
   if (!ticket) return res.status(404).json({ error: 'Ticket not found' });
 
-  const { assignedTo, status } = req.body;
+  if (req.currentUser.role === 'EMPLOYEE' && ticket.reported_by !== req.currentUser.id) {
+    return res.status(403).json({ error: 'Access denied' });
+  }
+
+  const { comment } = req.body;
+  if (!comment || !comment.trim()) {
+    return res.status(400).json({ error: 'Comment text is required' });
+  }
+
+  const now = new Date().toISOString();
+  runStmt(
+    'INSERT INTO status_history (ticket_id, changed_by, old_status, new_status, changed_at, comment) VALUES (?, ?, ?, ?, ?, ?)',
+    [ticket.id, req.currentUser.id, ticket.status, ticket.status, now, comment.trim()]
+  );
+  runStmt('UPDATE tickets SET updated_at = ? WHERE id = ?', [now, ticket.id]);
+  saveDb();
+  res.status(201).json({ success: true, message: 'Comment added successfully' });
+});
+
+// Update ticket (PATCH)
+app.patch('/api/tickets/:id', authenticate, (req, res) => {
+  const ticket = getRow('SELECT * FROM tickets WHERE id = ?', [req.params.id]);
+  if (!ticket) return res.status(404).json({ error: 'Ticket not found' });
+
+  // Employees can close or reopen their own tickets
+  const isEmployee = req.currentUser.role === 'EMPLOYEE';
+  if (isEmployee && ticket.reported_by !== req.currentUser.id) {
+    return res.status(403).json({ error: 'Access denied' });
+  }
+
+  const { assignedTo, status, comment } = req.body;
 
   if (assignedTo !== undefined && assignedTo !== null) {
+    if (isEmployee) return res.status(403).json({ error: 'Only technicians can assign tickets' });
     const assignee = getRow('SELECT * FROM users WHERE id = ?', [assignedTo]);
     if (!assignee) return res.status(400).json({ error: 'Assigned user not found' });
     if (assignee.role !== 'TECHNICIAN') return res.status(400).json({ error: 'Can only assign tickets to technicians' });
@@ -367,10 +404,10 @@ app.patch('/api/tickets/:id', authenticate, (req, res) => {
   if (status) {
     const newStatus = status.toUpperCase().replace(/-/g, '_');
     const validTransitions = {
-      OPEN: ['IN_PROGRESS', 'CLOSED'],
+      OPEN: ['IN_PROGRESS', 'CLOSED', 'RESOLVED'],
       IN_PROGRESS: ['RESOLVED', 'OPEN', 'CLOSED'],
-      RESOLVED: ['CLOSED', 'OPEN'],
-      CLOSED: ['OPEN'],
+      RESOLVED: ['CLOSED', 'OPEN', 'IN_PROGRESS'],
+      CLOSED: ['OPEN', 'IN_PROGRESS'],
     };
 
     const oldStatus = ticket.status;
@@ -382,8 +419,14 @@ app.patch('/api/tickets/:id', authenticate, (req, res) => {
     const now = new Date().toISOString();
     runStmt('UPDATE tickets SET status = ?, updated_at = ? WHERE id = ?', [newStatus, now, ticket.id]);
     runStmt(
-      'INSERT INTO status_history (ticket_id, changed_by, old_status, new_status, changed_at) VALUES (?, ?, ?, ?, ?)',
-      [ticket.id, req.currentUser.id, oldStatus, newStatus, now]
+      'INSERT INTO status_history (ticket_id, changed_by, old_status, new_status, changed_at, comment) VALUES (?, ?, ?, ?, ?, ?)',
+      [ticket.id, req.currentUser.id, oldStatus, newStatus, now, comment ? comment.trim() : null]
+    );
+  } else if (comment && comment.trim()) {
+    const now = new Date().toISOString();
+    runStmt(
+      'INSERT INTO status_history (ticket_id, changed_by, old_status, new_status, changed_at, comment) VALUES (?, ?, ?, ?, ?, ?)',
+      [ticket.id, req.currentUser.id, ticket.status, ticket.status, now, comment.trim()]
     );
   }
 
@@ -411,6 +454,7 @@ app.get('/api/tickets/:id/history', authenticate, (req, res) => {
       oldStatus: h.old_status,
       newStatus: h.new_status,
       changedAt: h.changed_at,
+      comment: h.comment || null,
     };
   }));
 });

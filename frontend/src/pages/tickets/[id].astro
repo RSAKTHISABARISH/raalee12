@@ -3,7 +3,7 @@ import Layout from '../../layouts/Layout.astro';
 import TicketDetail from '../../components/tickets/TicketDetail';
 
 export function getStaticPaths() {
-  return Array.from({ length: 100 }, (_, i) => ({
+  return Array.from({ length: 10000 }, (_, i) => ({
     params: { id: String(i + 1) },
   }));
 }

@@ -114,10 +114,17 @@ export async function getTicket(id: number) {
   return request(`/tickets/${id}`);
 }
 
-export async function updateTicket(id: number, data: { status?: string; assignedTo?: number }) {
+export async function updateTicket(id: number, data: { status?: string; assignedTo?: number; comment?: string }) {
   return request(`/tickets/${id}`, {
     method: 'PATCH',
     body: JSON.stringify(data),
+  });
+}
+
+export async function addTicketComment(id: number, comment: string) {
+  return request(`/tickets/${id}/comments`, {
+    method: 'POST',
+    body: JSON.stringify({ comment }),
   });
 }
 
