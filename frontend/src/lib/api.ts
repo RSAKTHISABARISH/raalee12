@@ -144,3 +144,11 @@ export async function getCurrentUser() {
 export async function getTechnicians() {
   return request('/users/technicians');
 }
+
+// AI Chatbot API
+export async function sendChatMessage(message: string) {
+  return request('/chat', {
+    method: 'POST',
+    body: JSON.stringify({ message }),
+  });
+}

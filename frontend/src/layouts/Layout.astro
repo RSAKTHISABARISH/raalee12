@@ -1,5 +1,6 @@
 ---
 import '../styles/global.css'
+import Chatbot from '../components/chat/Chatbot';
 
 interface Props {
   title: string;
@@ -21,5 +22,6 @@ const { title } = Astro.props;
   </head>
   <body class="min-h-screen portal-bg text-[#111111] antialiased">
     <slot />
+    <Chatbot client:only="react" />
   </body>
 </html>

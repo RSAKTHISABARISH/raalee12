@@ -459,6 +459,150 @@ app.get('/api/tickets/:id/history', authenticate, (req, res) => {
   }));
 });
 
+// =====================
+// AI CHATBOT ROUTE
+// =====================
+app.post('/api/chat', authenticate, (req, res) => {
+  const { message } = req.body;
+  if (!message || !message.trim()) {
+    return res.status(400).json({ error: 'Message is required' });
+  }
+
+  const text = message.trim();
+  const lower = text.toLowerCase();
+
+  // 1. Check if user is asking about a specific ticket (e.g. "ticket 152", "#152", "status of 152")
+  const ticketMatch = text.match(/#?(\b\d{1,5}\b)/);
+  if (ticketMatch && (lower.includes('ticket') || lower.includes('status') || lower.includes('#') || lower.includes('check'))) {
+    const tId = parseInt(ticketMatch[1], 10);
+    const ticket = getRow('SELECT * FROM tickets WHERE id = ?', [tId]);
+    if (ticket) {
+      if (req.currentUser.role === 'EMPLOYEE' && ticket.reported_by !== req.currentUser.id) {
+        return res.json({
+          reply: `Incident **#${tId}** exists in the registry, but is registered under another corporate employee. Under security policy, you may only view details for your own incidents.`,
+        });
+      }
+      const tech = ticket.assigned_to ? getRow('SELECT name, email FROM users WHERE id = ?', [ticket.assigned_to]) : null;
+      const reporter = getRow('SELECT name FROM users WHERE id = ?', [ticket.reported_by]);
+      
+      const slaMap = { URGENT: '2 hours', HIGH: '4 hours', MEDIUM: '8 hours', LOW: '24 hours' };
+      const slaTarget = slaMap[ticket.priority] || '8 hours';
+
+      return res.json({
+        reply: `Here are the latest telemetry details for **Incident #${ticket.id}**:\n\n` +
+          `• **Title**: ${ticket.title}\n` +
+          `• **Status**: \`${ticket.status}\`\n` +
+          `• **Priority**: \`${ticket.priority}\` (Target SLA: ${slaTarget})\n` +
+          `• **Category**: ${ticket.category.replace(/_/g, ' ')}\n` +
+          `• **Assigned Technician**: ${tech ? tech.name : '*Unassigned (Awaiting Dispatch)*'}\n` +
+          `• **Reported By**: ${reporter ? reporter.name : 'Employee'}\n` +
+          `• **Filed On**: ${new Date(ticket.created_at).toLocaleString('en-US')}\n\n` +
+          `[Click here to view the full incident workspace](/tickets/${ticket.id})`,
+        ticket: ticketToDTO(ticket)
+      });
+    }
+  }
+
+  // 2. Check for "my tickets" / list
+  if (lower.includes('my tickets') || lower.includes('my open') || lower.includes('what are my tickets')) {
+    const myTickets = allRows('SELECT * FROM tickets WHERE reported_by = ? ORDER BY created_at DESC LIMIT 5', [req.currentUser.id]);
+    if (myTickets.length === 0) {
+      return res.json({
+        reply: `You currently have **0 active support tickets** filed in the portal. Everything looks clear! Would you like me to help you report a new incident?`,
+        suggestedActions: ['Submit New Ticket', 'Check VPN Guide', 'Request Software']
+      });
+    }
+    const listStr = myTickets.map(t => `• **#${t.id}**: ${t.title} — \`${t.status}\` (${t.priority} Priority)`).join('\n');
+    return res.json({
+      reply: `Here are your recent support tickets:\n\n${listStr}\n\nYou can ask me *"What is the status of ticket #..."* or visit your [My Tickets Dashboard](/tickets/my).`,
+      suggestedActions: ['Create Ticket', 'VPN Troubleshooting', 'Password Reset']
+    });
+  }
+
+  // 3. Knowledge Base: Password Reset & MFA
+  if (lower.includes('password') || lower.includes('reset') || lower.includes('mfa') || lower.includes('2fa') || lower.includes('locked')) {
+    return res.json({
+      reply: `### 🔑 Corporate Identity & Password Recovery Guide\n\n` +
+        `If you are locked out or need to update your corporate credentials:\n\n` +
+        `1. **Self-Service Portal**: Navigate to \`https://identity.company.com/recovery\` and authenticate using your backup SMS or Authenticator App.\n` +
+        `2. **Password Policy**: Passwords must contain at least **14 characters**, including upper/lowercase, numbers, and symbols.\n` +
+        `3. **MFA Token Desync**: If your Microsoft/Google Authenticator code fails, open the app settings and select **"Time Sync"**.\n\n` +
+        `*If you are completely locked out of email, would you like me to open an **Urgent Access Rights** ticket for an IT technician?*`,
+      suggestedActions: ['Create Password Ticket', 'Check Ticket Status', 'Talk to Human Tech']
+    });
+  }
+
+  // 4. Knowledge Base: VPN & Connectivity
+  if (lower.includes('vpn') || lower.includes('wifi') || lower.includes('network') || lower.includes('internet') || lower.includes('dns')) {
+    return res.json({
+      reply: `### 🌐 Corporate VPN & Connectivity Diagnostics\n\n` +
+        `Follow these steps to resolve VPN and network drops:\n\n` +
+        `1. **Gateway Selection**: In GlobalProtect / AnyConnect, switch gateway to \`vpn-east.company.com\` or \`vpn-west.company.com\`.\n` +
+        `2. **Flush DNS**: Open terminal/command prompt and run:\n` +
+        `   \`\`\`bash\n   ipconfig /flushdns\n   \`\`\`\n` +
+        `3. **Re-authenticate SSO**: Disconnect from VPN, log out of SSO in your browser, and reconnect.\n` +
+        `4. **WiFi Network**: Ensure you are connected to the \`Corporate-Secure\` SSID rather than \`Guest-WiFi\`.\n\n` +
+        `*Still experiencing connectivity failure? I can dispatch an incident to our Network Engineering team.*`,
+      suggestedActions: ['Report Network Incident', 'Check My Tickets', 'View SLA Rules']
+    });
+  }
+
+  // 5. Knowledge Base: Hardware & Monitors
+  if (lower.includes('monitor') || lower.includes('display') || lower.includes('screen') || lower.includes('dock') || lower.includes('laptop') || lower.includes('keyboard')) {
+    return res.json({
+      reply: `### 💻 Hardware & Peripheral Troubleshooting\n\n` +
+        `For external monitors, docks, and workstation peripherals:\n\n` +
+        `1. **Power Cycle Dock**: Unplug your USB-C Thunderbolt docking station from wall power for **30 seconds**, then reconnect.\n` +
+        `2. **Display Detection**: Press \`Windows Key + P\` and ensure **"Extend"** or **"Duplicate"** is selected.\n` +
+        `3. **Driver Refresh**: Press \`Win + Ctrl + Shift + B\` on Windows to restart the graphics subsystem without restarting your PC.\n` +
+        `4. **Cable Check**: Verify the HDMI/DisplayPort cable is firmly seated into the dock.\n\n` +
+        `*If hardware appears physically damaged or failing, submit a ticket below for replacement dispatch.*`,
+      suggestedActions: ['Submit Hardware Replacement', 'Check Ticket #152', 'HelpDesk Hours']
+    });
+  }
+
+  // 6. Knowledge Base: Software Licenses & Access
+  if (lower.includes('software') || lower.includes('access') || lower.includes('figma') || lower.includes('github') || lower.includes('aws') || lower.includes('license') || lower.includes('jira')) {
+    return res.json({
+      reply: `### 📦 Software & Cloud Permissions Request\n\n` +
+        `To provision access to corporate engineering and design tools:\n\n` +
+        `• **Approved Catalog**: Standard tools (Slack, Zoom, VS Code, Chrome) are available self-service via the **Company Software Center** app.\n` +
+        `• **Cloud & Engineering (AWS / GCP / GitHub)**: Requires manager approval. File a request with category **Account Access**.\n` +
+        `• **Figma / Adobe Creative Cloud**: Provisioned within 4 hours following IT review.\n\n` +
+        `*Would you like to submit a Software Access request right now?*`,
+      suggestedActions: ['Request Software Access', 'Check Open Tickets', 'SLA Response Times']
+    });
+  }
+
+  // 7. Knowledge Base: SLAs and Support Hours
+  if (lower.includes('sla') || lower.includes('hours') || lower.includes('time') || lower.includes('support')) {
+    return res.json({
+      reply: `### ⏱️ HelpDesk 360 Service Level Agreements (SLA)\n\n` +
+        `Our corporate IT operations team operates **24/7/365** with guaranteed response windows:\n\n` +
+        `• 🔴 **URGENT (Severity 1)**: Initial response in **15 mins** • Resolution target: **2 hours**\n` +
+        `• 🟠 **HIGH (Severity 2)**: Initial response in **30 mins** • Resolution target: **4 hours**\n` +
+        `• 🔵 **MEDIUM (Severity 3)**: Standard resolution target: **8 hours**\n` +
+        `• 🟢 **LOW (Severity 4)**: Inquiries & minor tasks: **24 hours**\n\n` +
+        `All metrics are measured against live automated audit telemetry.`,
+      suggestedActions: ['Submit Urgent Incident', 'View Support Queue', 'Check Ticket Status']
+    });
+  }
+
+  // Default Fallback: Helpful AI Assistant
+  return res.json({
+    reply: `Hello! I am the **HelpDesk 360 AI Virtual Assistant**.\n\n` +
+      `I can help you with:\n` +
+      `• 🔑 **Password & MFA recovery**\n` +
+      `• 🌐 **VPN & network connection issues**\n` +
+      `• 💻 **Hardware, monitor & docking setup**\n` +
+      `• 📦 **Software licenses & access permissions**\n` +
+      `• 🎫 **Real-time status check on any ticket** (e.g. *"What is the status of ticket #152?"*)\n` +
+      `• 📝 **Filing a new support incident**\n\n` +
+      `How may I assist you today?`,
+    suggestedActions: ['Check Ticket #152', 'Reset Password', 'VPN Troubleshooting', 'Submit New Ticket']
+  });
+});
+
 // --- Start Server ---
 app.listen(PORT, () => {
   console.log(`\n  🚀 HelpDesk 360 Mock Backend running on http://localhost:${PORT}`);
