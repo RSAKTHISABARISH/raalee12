@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="none">
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#141824"/>
+      <stop offset="100%" stop-color="#07090E"/>
+    </linearGradient>
+    <linearGradient id="accentGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#10A37F"/>
+      <stop offset="50%" stop-color="#00D294"/>
+      <stop offset="100%" stop-color="#3B82F6"/>
+    </linearGradient>
+    <linearGradient id="ringGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#38BDF8"/>
+      <stop offset="100%" stop-color="#818CF8"/>
+    </linearGradient>
+    <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="16" result="blur"/>
+      <feComposite in="SourceGraphic" in2="blur" operator="over"/>
+    </filter>
+  </defs>
+
+  <!-- App Rounded Squircle Container -->
+  <rect width="512" height="512" rx="128" fill="url(#bgGrad)"/>
+  <rect width="504" height="504" x="4" y="4" rx="124" stroke="url(#accentGrad)" stroke-width="8" stroke-opacity="0.3"/>
+
+  <!-- 360 Orbital Ring -->
+  <circle cx="256" cy="256" r="160" stroke="url(#ringGrad)" stroke-width="12" stroke-linecap="round" stroke-dasharray="720 280" transform="rotate(-45 256 256)" opacity="0.6"/>
+
+  <!-- Shield Core -->
+  <path d="M256 112L368 168V264C368 336 320 392 256 416C192 392 144 336 144 264V168L256 112Z" fill="url(#accentGrad)" filter="url(#glow)"/>
+
+  <!-- Headset / Support 360 Emblem -->
+  <path d="M216 240C216 217.909 233.909 200 256 200C278.091 200 296 217.909 296 240V272C296 280.837 288.837 288 280 288H272V240H280V240C280 226.745 269.255 216 256 216C242.745 216 232 226.745 232 240H240V288H232C223.163 288 216 280.837 216 272V240Z" fill="#FFFFFF"/>
+  <rect x="208" y="240" width="16" height="40" rx="8" fill="#FFFFFF"/>
+  <rect x="288" y="240" width="16" height="40" rx="8" fill="#FFFFFF"/>
+  <path d="M288 280V296C288 304.837 280.837 312 272 312H256" stroke="#FFFFFF" stroke-width="10" stroke-linecap="round"/>
+  <circle cx="250" cy="312" r="8" fill="#FFFFFF"/>
+</svg>

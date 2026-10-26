@@ -103,3 +103,17 @@ body {
 ::-webkit-scrollbar-thumb:hover {
   background: #A3A3A3;
 }
+
+/* PWA Standalone & Mobile Safe Area Insets */
+.pb-safe {
+  padding-bottom: max(env(safe-area-inset-bottom, 0px), 0.75rem);
+}
+.pt-safe {
+  padding-top: max(env(safe-area-inset-top, 0px), 0.75rem);
+}
+
+@media all and (display-mode: standalone) {
+  body {
+    -webkit-tap-highlight-color: transparent;
+  }
+}
