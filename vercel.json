@@ -20,6 +20,12 @@
   },
   "rewrites": [
     {
+      "source": "/api",
+      "destination": {
+        "service": "mock-server"
+      }
+    },
+    {
       "source": "/api/(.*)",
       "destination": {
         "service": "mock-server"

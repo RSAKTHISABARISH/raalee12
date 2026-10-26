@@ -2,7 +2,7 @@ import express from 'express';
 import cors from 'cors';
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcryptjs';
-import initSqlJs from 'sql.js';
+import initSqlJs from 'sql.js/dist/sql-wasm-inline.js';
 import fs from 'fs';
 import { fileURLToPath } from 'url';
 import path from 'path';

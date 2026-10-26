@@ -56,15 +56,23 @@ async function request(endpoint: string, options: RequestInit = {}): Promise<any
     headers,
   });
 
-  if (response.status === 401) {
+  if (response.status === 401 && endpoint !== '/auth/login') {
     logout();
     throw new Error('Session expired. Please log in again.');
   }
 
-  const data = await response.json();
+  const rawText = await response.text();
+  let data: any = {};
+  try {
+    data = rawText ? JSON.parse(rawText) : {};
+  } catch (_e) {
+    if (!response.ok) {
+      throw new Error(rawText.substring(0, 160) || `Server error (${response.status})`);
+    }
+  }
 
   if (!response.ok) {
-    throw new Error(data.error || data.message || 'Request failed');
+    throw new Error(data.error || data.message || `Request failed with HTTP ${response.status}`);
   }
 
   return data;
