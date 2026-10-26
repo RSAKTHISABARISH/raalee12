@@ -1,5 +1,35 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
-  "buildCommand": "cd frontend && npm install && npm run build",
-  "outputDirectory": "frontend/dist"
+  "services": {
+    "mock-server": {
+      "root": "backend/mock-server",
+      "framework": "express"
+    },
+    "frontend": {
+      "root": "frontend",
+      "framework": "astro",
+      "bindings": [
+        {
+          "type": "service",
+          "service": "mock-server",
+          "format": "url",
+          "env": "BACKEND_URL"
+        }
+      ]
+    }
+  },
+  "rewrites": [
+    {
+      "source": "/api/(.*)",
+      "destination": {
+        "service": "mock-server"
+      }
+    },
+    {
+      "source": "/(.*)",
+      "destination": {
+        "service": "frontend"
+      }
+    }
+  ]
 }

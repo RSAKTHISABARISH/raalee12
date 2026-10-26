@@ -8,30 +8,42 @@ import { fileURLToPath } from 'url';
 import path from 'path';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const DB_PATH = path.join(__dirname, '..', 'helpdesk360.db');
+const DB_PATH = process.env.VERCEL
+  ? path.join('/tmp', 'helpdesk360.db')
+  : path.join(__dirname, '..', 'helpdesk360.db');
 
 // --- Config ---
-const PORT = 8080;
-const JWT_SECRET = 'helpdesk360-dev-secret-key-change-in-production-min-32-chars';
+const PORT = process.env.PORT || 8080;
+const JWT_SECRET = process.env.JWT_SECRET || 'helpdesk360-dev-secret-key-change-in-production-min-32-chars';
 const JWT_EXPIRATION_MS = 86400000; // 24 hours
 
 // --- Initialize sql.js and load DB ---
 const SQL = await initSqlJs();
 let db;
-if (fs.existsSync(DB_PATH)) {
-  const buffer = fs.readFileSync(DB_PATH);
-  db = new SQL.Database(buffer);
-  console.log(`[DB] Loaded existing database from ${DB_PATH}`);
-} else {
+try {
+  if (fs.existsSync(DB_PATH)) {
+    const buffer = fs.readFileSync(DB_PATH);
+    db = new SQL.Database(buffer);
+    console.log(`[DB] Loaded existing database from ${DB_PATH}`);
+  } else {
+    db = new SQL.Database();
+    console.log('[DB] Created new in-memory database');
+  }
+} catch (err) {
   db = new SQL.Database();
-  console.log('[DB] Created new in-memory database');
+  console.log('[DB] Fallback to in-memory database:', err.message);
 }
 
 // Helper to save DB back to disk periodically
 function saveDb() {
-  const data = db.export();
-  const buffer = Buffer.from(data);
-  fs.writeFileSync(DB_PATH, buffer);
+  try {
+    const data = db.export();
+    const buffer = Buffer.from(data);
+    fs.writeFileSync(DB_PATH, buffer);
+  } catch (err) {
+    // Keep running in-memory safely in read-only environments
+    console.warn('[DB] Persistent file write skipped:', err.message);
+  }
 }
 
 // Ensure schema columns
@@ -129,15 +141,62 @@ if (userCount === 0) {
   console.log('  All passwords: password123');
 }
 
+// Seed sample tickets if empty
+const ticketCount = getRow('SELECT count(*) as cnt FROM tickets')?.cnt || 0;
+if (ticketCount === 0) {
+  console.log('[SEED] Creating sample tickets...');
+  const now = new Date().toISOString();
+  const past1 = new Date(Date.now() - 3600000 * 2).toISOString();
+  const past2 = new Date(Date.now() - 3600000 * 5).toISOString();
+  const past3 = new Date(Date.now() - 86400000).toISOString();
+
+  // 1. Hardware Issue - Alice
+  const t1 = runStmt(
+    `INSERT INTO tickets (title, description, category, priority, status, reported_by, assigned_to, created_at, updated_at)
+     VALUES (?, ?, 'HARDWARE', 'HIGH', 'IN_PROGRESS', 1, 4, ?, ?)`,
+    ['External 4K Monitor Flickering on Dock', 'Dell UltraSharp monitor intermittently blacking out when connected via USB-C dock.', past2, now]
+  );
+  runStmt(`INSERT INTO status_history (ticket_id, changed_by, old_status, new_status, changed_at, comment) VALUES (?, 1, NULL, 'OPEN', ?, 'Initial ticket submission')`, [t1.lastInsertRowid, past2]);
+  runStmt(`INSERT INTO status_history (ticket_id, changed_by, old_status, new_status, changed_at, comment) VALUES (?, 4, 'OPEN', 'IN_PROGRESS', ?, 'Assigned to Dave Tech - firmware update in progress')`, [t1.lastInsertRowid, now]);
+
+  // 2. Network Issue - Bob
+  const t2 = runStmt(
+    `INSERT INTO tickets (title, description, category, priority, status, reported_by, assigned_to, created_at, updated_at)
+     VALUES (?, ?, 'NETWORK', 'URGENT', 'OPEN', 2, NULL, ?, ?)`,
+    ['GlobalProtect VPN Gateway Timeout', 'Unable to reach internal staging cluster after recent macOS network config update.', past1, past1]
+  );
+  runStmt(`INSERT INTO status_history (ticket_id, changed_by, old_status, new_status, changed_at, comment) VALUES (?, 2, NULL, 'OPEN', ?, 'Urgent incident logged')`, [t2.lastInsertRowid, past1]);
+
+  // 3. Software Request - Carol
+  const t3 = runStmt(
+    `INSERT INTO tickets (title, description, category, priority, status, reported_by, assigned_to, created_at, updated_at)
+     VALUES (?, ?, 'SOFTWARE', 'MEDIUM', 'RESOLVED', 3, 5, ?, ?)`,
+    ['JetBrains IDE Enterprise License Provisioning', 'Need IntelliJ IDEA Ultimate license renewal for Q4 development cycle.', past3, now]
+  );
+  runStmt(`INSERT INTO status_history (ticket_id, changed_by, old_status, new_status, changed_at, comment) VALUES (?, 3, NULL, 'OPEN', ?, 'License request submitted')`, [t3.lastInsertRowid, past3]);
+  runStmt(`INSERT INTO status_history (ticket_id, changed_by, old_status, new_status, changed_at, comment) VALUES (?, 5, 'OPEN', 'RESOLVED', ?, 'License assigned and activated via JetBrains Account')`, [t3.lastInsertRowid, now]);
+
+  saveDb();
+  console.log('[SEED] Sample tickets created.');
+}
+
 // --- Express App ---
 const app = express();
 app.use(cors({
-  origin: ['http://localhost:4321', 'http://localhost:3000'],
+  origin: true,
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['*'],
 }));
 app.use(express.json());
+
+// Normalize path so all routes work whether /api is preserved by Vercel or stripped
+app.use((req, res, next) => {
+  if (!req.url.startsWith('/api')) {
+    req.url = '/api' + req.url;
+  }
+  next();
+});
 
 // --- Helpers ---
 function generateToken(userId, email, role) {
@@ -701,9 +760,13 @@ app.post('/api/chat', authenticate, (req, res) => {
 });
 
 // --- Start Server ---
-app.listen(PORT, () => {
-  console.log(`\n  🚀 HelpDesk 360 Mock Backend running on http://localhost:${PORT}`);
-  console.log(`  📦 Database: ${DB_PATH}`);
-  console.log(`  🔑 JWT Secret: ${JWT_SECRET.substring(0, 15)}...`);
-  console.log();
-});
+if (!process.env.VERCEL) {
+  app.listen(PORT, () => {
+    console.log(`\n  🚀 HelpDesk 360 Mock Backend running on http://localhost:${PORT}`);
+    console.log(`  📦 Database: ${DB_PATH}`);
+    console.log(`  🔑 JWT Secret: ${JWT_SECRET.substring(0, 15)}...`);
+    console.log();
+  });
+}
+
+export default app;

@@ -1,4 +1,5 @@
-const API_BASE = (import.meta as any).env?.PUBLIC_API_BASE || 'http://localhost:8080/api';
+const API_BASE = (import.meta as any).env?.PUBLIC_API_BASE
+  || (typeof window !== 'undefined' && window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1' ? '/api' : 'http://localhost:8080/api');
 
 // Auth token management
 export function getToken(): string | null {
