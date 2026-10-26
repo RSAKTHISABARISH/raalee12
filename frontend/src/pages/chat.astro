@@ -1,0 +1,8 @@
+---
+import Layout from '../layouts/Layout.astro';
+import ChatPage from '../components/chat/ChatPage.tsx';
+---
+
+<Layout title="AI Assistant">
+  <ChatPage client:only="react" />
+</Layout>

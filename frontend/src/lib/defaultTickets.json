@@ -1,0 +1,662 @@
+[
+  {
+    "id": 152,
+    "title": "SAKTHI",
+    "description": "RAGUNATH IS SERIOUS",
+    "category": "SOFTWARE",
+    "priority": "URGENT",
+    "status": "CLOSED",
+    "reportedBy": {
+      "id": 1,
+      "name": "Alice Johnson",
+      "email": "alice@company.com",
+      "role": "EMPLOYEE"
+    },
+    "assignedTo": {
+      "id": 4,
+      "name": "Dave Tech",
+      "email": "dave@company.com",
+      "role": "TECHNICIAN"
+    },
+    "createdAt": "2026-10-26T05:04:01.597Z",
+    "updatedAt": "2026-10-26T05:05:08.145Z"
+  },
+  {
+    "id": 40,
+    "title": "General Inquiry: Software service outage (Oman)",
+    "description": "Channel: Phone | Region: Oman | Product Group: Software | Tier: L3 | Team: IT Support\n\nIssue reported regarding general inquiry impacting enterprise workflow. Technician diagnostics and SLA tracking actively monitored.",
+    "category": "SOFTWARE",
+    "priority": "URGENT",
+    "status": "CLOSED",
+    "reportedBy": {
+      "id": 1,
+      "name": "Alice Johnson",
+      "email": "alice@company.com",
+      "role": "EMPLOYEE"
+    },
+    "assignedTo": {
+      "id": 4,
+      "name": "Dave Tech",
+      "email": "dave@company.com",
+      "role": "TECHNICIAN"
+    },
+    "createdAt": "2024-08-10T13:54:00Z",
+    "updatedAt": "2026-10-26T05:02:02.102Z"
+  },
+  {
+    "id": 13,
+    "title": "Hardware Failure: Hardware service outage (Kuwait)",
+    "description": "Channel: Chat | Region: Kuwait | Product Group: Hardware | Tier: L2 | Team: IT Support\n\nIssue reported regarding hardware failure impacting enterprise workflow. Technician diagnostics and SLA tracking actively monitored.",
+    "category": "HARDWARE",
+    "priority": "URGENT",
+    "status": "OPEN",
+    "reportedBy": {
+      "id": 3,
+      "name": "Carol Davis",
+      "email": "carol@company.com",
+      "role": "EMPLOYEE"
+    },
+    "assignedTo": {
+      "id": 34,
+      "name": "Mohammed Al-Hamdan",
+      "email": "mohammed.al.hamdan@company.com",
+      "role": "TECHNICIAN"
+    },
+    "createdAt": "2024-08-10T02:56:00Z",
+    "updatedAt": "2024-08-10T02:56:00Z"
+  },
+  {
+    "id": 115,
+    "title": "Access Request: Network service outage (Qatar)",
+    "description": "Channel: Chat | Region: Qatar | Product Group: Network | Tier: L1 | Team: Development\n\nIssue reported regarding access request impacting enterprise workflow. Technician diagnostics and SLA tracking actively monitored.",
+    "category": "ACCOUNT_ACCESS",
+    "priority": "URGENT",
+    "status": "OPEN",
+    "reportedBy": {
+      "id": 2,
+      "name": "Bob Smith",
+      "email": "bob@company.com",
+      "role": "EMPLOYEE"
+    },
+    "assignedTo": {
+      "id": 9,
+      "name": "Yousef Al-Khalifa",
+      "email": "yousef.al.khalifa@company.com",
+      "role": "TECHNICIAN"
+    },
+    "createdAt": "2024-07-28T16:44:00Z",
+    "updatedAt": "2024-07-28T16:44:00Z"
+  },
+  {
+    "id": 119,
+    "title": "Hardware Failure: Hardware service outage (UAE)",
+    "description": "Channel: Phone | Region: UAE | Product Group: Hardware | Tier: L1 | Team: Network Ops\n\nIssue reported regarding hardware failure impacting enterprise workflow. Technician diagnostics and SLA tracking actively monitored.",
+    "category": "HARDWARE",
+    "priority": "URGENT",
+    "status": "IN_PROGRESS",
+    "reportedBy": {
+      "id": 1,
+      "name": "Alice Johnson",
+      "email": "alice@company.com",
+      "role": "EMPLOYEE"
+    },
+    "assignedTo": {
+      "id": 23,
+      "name": "Fahad Al-Farsi",
+      "email": "fahad.al.farsi@company.com",
+      "role": "TECHNICIAN"
+    },
+    "createdAt": "2024-07-28T15:42:00Z",
+    "updatedAt": "2024-07-28T15:42:00Z"
+  },
+  {
+    "id": 138,
+    "title": "Hardware Failure: Cloud service outage (Saudi Arabia)",
+    "description": "Channel: Portal | Region: Saudi Arabia | Product Group: Cloud | Tier: L1 | Team: Security\n\nIssue reported regarding hardware failure impacting enterprise workflow. Technician diagnostics and SLA tracking actively monitored.",
+    "category": "HARDWARE",
+    "priority": "URGENT",
+    "status": "RESOLVED",
+    "reportedBy": {
+      "id": 1,
+      "name": "Alice Johnson",
+      "email": "alice@company.com",
+      "role": "EMPLOYEE"
+    },
+    "assignedTo": {
+      "id": 10,
+      "name": "Saif Al-Khalifa",
+      "email": "saif.al.khalifa@company.com",
+      "role": "TECHNICIAN"
+    },
+    "createdAt": "2024-07-25T16:13:00Z",
+    "updatedAt": "2024-07-25T16:13:00Z"
+  },
+  {
+    "id": 132,
+    "title": "Hardware Failure: Hardware service outage (Oman)",
+    "description": "Channel: Email | Region: Oman | Product Group: Hardware | Tier: L2 | Team: IT Support\n\nIssue reported regarding hardware failure impacting enterprise workflow. Technician diagnostics and SLA tracking actively monitored.",
+    "category": "HARDWARE",
+    "priority": "URGENT",
+    "status": "IN_PROGRESS",
+    "reportedBy": {
+      "id": 3,
+      "name": "Carol Davis",
+      "email": "carol@company.com",
+      "role": "EMPLOYEE"
+    },
+    "assignedTo": {
+      "id": 21,
+      "name": "Abdullah Al-Rashid",
+      "email": "abdullah.al.rashid@company.com",
+      "role": "TECHNICIAN"
+    },
+    "createdAt": "2024-07-23T01:57:00Z",
+    "updatedAt": "2024-07-23T01:57:00Z"
+  },
+  {
+    "id": 74,
+    "title": "Software Bug: Network service outage (Oman)",
+    "description": "Channel: Email | Region: Oman | Product Group: Network | Tier: L3 | Team: Development\n\nIssue reported regarding software bug impacting enterprise workflow. Technician diagnostics and SLA tracking actively monitored.",
+    "category": "SOFTWARE",
+    "priority": "URGENT",
+    "status": "OPEN",
+    "reportedBy": {
+      "id": 1,
+      "name": "Alice Johnson",
+      "email": "alice@company.com",
+      "role": "EMPLOYEE"
+    },
+    "assignedTo": {
+      "id": 12,
+      "name": "Saif Al-Rashid",
+      "email": "saif.al.rashid@company.com",
+      "role": "TECHNICIAN"
+    },
+    "createdAt": "2024-07-22T07:55:00Z",
+    "updatedAt": "2024-07-22T07:55:00Z"
+  },
+  {
+    "id": 37,
+    "title": "Software Bug: Software service outage (Qatar)",
+    "description": "Channel: Email | Region: Qatar | Product Group: Software | Tier: L1 | Team: IT Support\n\nIssue reported regarding software bug impacting enterprise workflow. Technician diagnostics and SLA tracking actively monitored.",
+    "category": "SOFTWARE",
+    "priority": "URGENT",
+    "status": "OPEN",
+    "reportedBy": {
+      "id": 1,
+      "name": "Alice Johnson",
+      "email": "alice@company.com",
+      "role": "EMPLOYEE"
+    },
+    "assignedTo": {
+      "id": 13,
+      "name": "Omar Al-Mansoori",
+      "email": "omar.al.mansoori@company.com",
+      "role": "TECHNICIAN"
+    },
+    "createdAt": "2024-07-21T13:25:00Z",
+    "updatedAt": "2024-07-21T13:25:00Z"
+  },
+  {
+    "id": 38,
+    "title": "General Inquiry: Software service outage (Oman)",
+    "description": "Channel: Portal | Region: Oman | Product Group: Software | Tier: L1 | Team: Security\n\nIssue reported regarding general inquiry impacting enterprise workflow. Technician diagnostics and SLA tracking actively monitored.",
+    "category": "SOFTWARE",
+    "priority": "URGENT",
+    "status": "RESOLVED",
+    "reportedBy": {
+      "id": 3,
+      "name": "Carol Davis",
+      "email": "carol@company.com",
+      "role": "EMPLOYEE"
+    },
+    "assignedTo": {
+      "id": 22,
+      "name": "Mohammed Al-Rashid",
+      "email": "mohammed.al.rashid@company.com",
+      "role": "TECHNICIAN"
+    },
+    "createdAt": "2024-07-20T12:10:00Z",
+    "updatedAt": "2024-07-20T12:10:00Z"
+  },
+  {
+    "id": 117,
+    "title": "Network Issue: Network service outage (Oman)",
+    "description": "Channel: Chat | Region: Oman | Product Group: Network | Tier: L2 | Team: Customer Service\n\nIssue reported regarding network issue impacting enterprise workflow. Technician diagnostics and SLA tracking actively monitored.",
+    "category": "NETWORK",
+    "priority": "URGENT",
+    "status": "RESOLVED",
+    "reportedBy": {
+      "id": 1,
+      "name": "Alice Johnson",
+      "email": "alice@company.com",
+      "role": "EMPLOYEE"
+    },
+    "assignedTo": {
+      "id": 20,
+      "name": "Ahmed Al-Nasser",
+      "email": "ahmed.al.nasser@company.com",
+      "role": "TECHNICIAN"
+    },
+    "createdAt": "2024-07-12T18:50:00Z",
+    "updatedAt": "2024-07-12T18:50:00Z"
+  },
+  {
+    "id": 27,
+    "title": "Network Issue: Cloud service outage (Kuwait)",
+    "description": "Channel: Chat | Region: Kuwait | Product Group: Cloud | Tier: L3 | Team: Network Ops\n\nIssue reported regarding network issue impacting enterprise workflow. Technician diagnostics and SLA tracking actively monitored.",
+    "category": "NETWORK",
+    "priority": "URGENT",
+    "status": "OPEN",
+    "reportedBy": {
+      "id": 2,
+      "name": "Bob Smith",
+      "email": "bob@company.com",
+      "role": "EMPLOYEE"
+    },
+    "assignedTo": {
+      "id": 21,
+      "name": "Abdullah Al-Rashid",
+      "email": "abdullah.al.rashid@company.com",
+      "role": "TECHNICIAN"
+    },
+    "createdAt": "2024-07-01T10:55:00Z",
+    "updatedAt": "2024-07-01T10:55:00Z"
+  },
+  {
+    "id": 43,
+    "title": "Hardware Failure: Cloud service outage (Saudi Arabia)",
+    "description": "Channel: Portal | Region: Saudi Arabia | Product Group: Cloud | Tier: L2 | Team: Security\n\nIssue reported regarding hardware failure impacting enterprise workflow. Technician diagnostics and SLA tracking actively monitored.",
+    "category": "HARDWARE",
+    "priority": "URGENT",
+    "status": "CLOSED",
+    "reportedBy": {
+      "id": 3,
+      "name": "Carol Davis",
+      "email": "carol@company.com",
+      "role": "EMPLOYEE"
+    },
+    "assignedTo": {
+      "id": 33,
+      "name": "Abdullah Al-Mansoori",
+      "email": "abdullah.al.mansoori@company.com",
+      "role": "TECHNICIAN"
+    },
+    "createdAt": "2024-06-23T19:53:00Z",
+    "updatedAt": "2024-06-23T19:53:00Z"
+  },
+  {
+    "id": 5,
+    "title": "Hardware Failure: Hardware service outage (Qatar)",
+    "description": "Channel: Portal | Region: Qatar | Product Group: Hardware | Tier: L3 | Team: Customer Service\n\nIssue reported regarding hardware failure impacting enterprise workflow. Technician diagnostics and SLA tracking actively monitored.",
+    "category": "HARDWARE",
+    "priority": "URGENT",
+    "status": "CLOSED",
+    "reportedBy": {
+      "id": 1,
+      "name": "Alice Johnson",
+      "email": "alice@company.com",
+      "role": "EMPLOYEE"
+    },
+    "assignedTo": {
+      "id": 8,
+      "name": "Hassan Al-Rashid",
+      "email": "hassan.al.rashid@company.com",
+      "role": "TECHNICIAN"
+    },
+    "createdAt": "2024-06-19T22:51:00Z",
+    "updatedAt": "2024-06-19T22:51:00Z"
+  },
+  {
+    "id": 51,
+    "title": "Hardware Failure: Network service outage (Qatar)",
+    "description": "Channel: Chat | Region: Qatar | Product Group: Network | Tier: L3 | Team: Security\n\nIssue reported regarding hardware failure impacting enterprise workflow. Technician diagnostics and SLA tracking actively monitored.",
+    "category": "HARDWARE",
+    "priority": "URGENT",
+    "status": "RESOLVED",
+    "reportedBy": {
+      "id": 3,
+      "name": "Carol Davis",
+      "email": "carol@company.com",
+      "role": "EMPLOYEE"
+    },
+    "assignedTo": {
+      "id": 34,
+      "name": "Mohammed Al-Hamdan",
+      "email": "mohammed.al.hamdan@company.com",
+      "role": "TECHNICIAN"
+    },
+    "createdAt": "2024-06-18T08:46:00Z",
+    "updatedAt": "2024-06-18T08:46:00Z"
+  },
+  {
+    "id": 100,
+    "title": "General Inquiry: Software service outage (Bahrain)",
+    "description": "Channel: Email | Region: Bahrain | Product Group: Software | Tier: L1 | Team: Network Ops\n\nIssue reported regarding general inquiry impacting enterprise workflow. Technician diagnostics and SLA tracking actively monitored.",
+    "category": "SOFTWARE",
+    "priority": "URGENT",
+    "status": "IN_PROGRESS",
+    "reportedBy": {
+      "id": 1,
+      "name": "Alice Johnson",
+      "email": "alice@company.com",
+      "role": "EMPLOYEE"
+    },
+    "assignedTo": {
+      "id": 19,
+      "name": "Ali Al-Khalifa",
+      "email": "ali.al.khalifa@company.com",
+      "role": "TECHNICIAN"
+    },
+    "createdAt": "2024-06-14T09:42:00Z",
+    "updatedAt": "2024-06-14T09:42:00Z"
+  },
+  {
+    "id": 7,
+    "title": "Access Request: Software service outage (Bahrain)",
+    "description": "Channel: Portal | Region: Bahrain | Product Group: Software | Tier: L2 | Team: Security\n\nIssue reported regarding access request impacting enterprise workflow. Technician diagnostics and SLA tracking actively monitored.",
+    "category": "ACCOUNT_ACCESS",
+    "priority": "URGENT",
+    "status": "OPEN",
+    "reportedBy": {
+      "id": 1,
+      "name": "Alice Johnson",
+      "email": "alice@company.com",
+      "role": "EMPLOYEE"
+    },
+    "assignedTo": {
+      "id": 9,
+      "name": "Yousef Al-Khalifa",
+      "email": "yousef.al.khalifa@company.com",
+      "role": "TECHNICIAN"
+    },
+    "createdAt": "2024-06-10T07:16:00Z",
+    "updatedAt": "2024-06-10T07:16:00Z"
+  },
+  {
+    "id": 10,
+    "title": "Network Issue: Network service outage (Kuwait)",
+    "description": "Channel: Portal | Region: Kuwait | Product Group: Network | Tier: L2 | Team: Customer Service\n\nIssue reported regarding network issue impacting enterprise workflow. Technician diagnostics and SLA tracking actively monitored.",
+    "category": "NETWORK",
+    "priority": "URGENT",
+    "status": "OPEN",
+    "reportedBy": {
+      "id": 2,
+      "name": "Bob Smith",
+      "email": "bob@company.com",
+      "role": "EMPLOYEE"
+    },
+    "assignedTo": {
+      "id": 12,
+      "name": "Saif Al-Rashid",
+      "email": "saif.al.rashid@company.com",
+      "role": "TECHNICIAN"
+    },
+    "createdAt": "2024-06-10T06:48:00Z",
+    "updatedAt": "2024-06-10T06:48:00Z"
+  },
+  {
+    "id": 128,
+    "title": "Software Bug: Cloud service outage (Bahrain)",
+    "description": "Channel: Phone | Region: Bahrain | Product Group: Cloud | Tier: L1 | Team: Customer Service\n\nIssue reported regarding software bug impacting enterprise workflow. Technician diagnostics and SLA tracking actively monitored.",
+    "category": "SOFTWARE",
+    "priority": "URGENT",
+    "status": "CLOSED",
+    "reportedBy": {
+      "id": 2,
+      "name": "Bob Smith",
+      "email": "bob@company.com",
+      "role": "EMPLOYEE"
+    },
+    "assignedTo": {
+      "id": 30,
+      "name": "Abdullah Al-Farsi",
+      "email": "abdullah.al.farsi@company.com",
+      "role": "TECHNICIAN"
+    },
+    "createdAt": "2024-06-09T21:01:00Z",
+    "updatedAt": "2024-06-09T21:01:00Z"
+  },
+  {
+    "id": 44,
+    "title": "General Inquiry: Network service outage (UAE)",
+    "description": "Channel: Phone | Region: UAE | Product Group: Network | Tier: L3 | Team: Customer Service\n\nIssue reported regarding general inquiry impacting enterprise workflow. Technician diagnostics and SLA tracking actively monitored.",
+    "category": "SOFTWARE",
+    "priority": "URGENT",
+    "status": "OPEN",
+    "reportedBy": {
+      "id": 2,
+      "name": "Bob Smith",
+      "email": "bob@company.com",
+      "role": "EMPLOYEE"
+    },
+    "assignedTo": {
+      "id": 18,
+      "name": "Fahad Al-Rashid",
+      "email": "fahad.al.rashid@company.com",
+      "role": "TECHNICIAN"
+    },
+    "createdAt": "2024-06-02T17:12:00Z",
+    "updatedAt": "2024-06-02T17:12:00Z"
+  },
+  {
+    "id": 131,
+    "title": "General Inquiry: Software service outage (Kuwait)",
+    "description": "Channel: Chat | Region: Kuwait | Product Group: Software | Tier: L2 | Team: Network Ops\n\nIssue reported regarding general inquiry impacting enterprise workflow. Technician diagnostics and SLA tracking actively monitored.",
+    "category": "SOFTWARE",
+    "priority": "URGENT",
+    "status": "OPEN",
+    "reportedBy": {
+      "id": 3,
+      "name": "Carol Davis",
+      "email": "carol@company.com",
+      "role": "EMPLOYEE"
+    },
+    "assignedTo": {
+      "id": 19,
+      "name": "Ali Al-Khalifa",
+      "email": "ali.al.khalifa@company.com",
+      "role": "TECHNICIAN"
+    },
+    "createdAt": "2024-06-01T13:55:00Z",
+    "updatedAt": "2024-06-01T13:55:00Z"
+  },
+  {
+    "id": 130,
+    "title": "Software Bug: Software service outage (Bahrain)",
+    "description": "Channel: Phone | Region: Bahrain | Product Group: Software | Tier: L2 | Team: Network Ops\n\nIssue reported regarding software bug impacting enterprise workflow. Technician diagnostics and SLA tracking actively monitored.",
+    "category": "SOFTWARE",
+    "priority": "URGENT",
+    "status": "RESOLVED",
+    "reportedBy": {
+      "id": 1,
+      "name": "Alice Johnson",
+      "email": "alice@company.com",
+      "role": "EMPLOYEE"
+    },
+    "assignedTo": {
+      "id": 9,
+      "name": "Yousef Al-Khalifa",
+      "email": "yousef.al.khalifa@company.com",
+      "role": "TECHNICIAN"
+    },
+    "createdAt": "2024-06-01T13:14:00Z",
+    "updatedAt": "2024-06-01T13:14:00Z"
+  },
+  {
+    "id": 75,
+    "title": "Access Request: Hardware service outage (Bahrain)",
+    "description": "Channel: Email | Region: Bahrain | Product Group: Hardware | Tier: L2 | Team: Development\n\nIssue reported regarding access request impacting enterprise workflow. Technician diagnostics and SLA tracking actively monitored.",
+    "category": "ACCOUNT_ACCESS",
+    "priority": "URGENT",
+    "status": "OPEN",
+    "reportedBy": {
+      "id": 1,
+      "name": "Alice Johnson",
+      "email": "alice@company.com",
+      "role": "EMPLOYEE"
+    },
+    "assignedTo": {
+      "id": 8,
+      "name": "Hassan Al-Rashid",
+      "email": "hassan.al.rashid@company.com",
+      "role": "TECHNICIAN"
+    },
+    "createdAt": "2024-05-30T08:57:00Z",
+    "updatedAt": "2024-05-30T08:57:00Z"
+  },
+  {
+    "id": 87,
+    "title": "Network Issue: Cloud service outage (Bahrain)",
+    "description": "Channel: Chat | Region: Bahrain | Product Group: Cloud | Tier: L1 | Team: Security\n\nIssue reported regarding network issue impacting enterprise workflow. Technician diagnostics and SLA tracking actively monitored.",
+    "category": "NETWORK",
+    "priority": "URGENT",
+    "status": "RESOLVED",
+    "reportedBy": {
+      "id": 3,
+      "name": "Carol Davis",
+      "email": "carol@company.com",
+      "role": "EMPLOYEE"
+    },
+    "assignedTo": {
+      "id": 21,
+      "name": "Abdullah Al-Rashid",
+      "email": "abdullah.al.rashid@company.com",
+      "role": "TECHNICIAN"
+    },
+    "createdAt": "2024-05-30T00:08:00Z",
+    "updatedAt": "2024-05-30T00:08:00Z"
+  },
+  {
+    "id": 62,
+    "title": "Access Request: Hardware service outage (Qatar)",
+    "description": "Channel: Email | Region: Qatar | Product Group: Hardware | Tier: L2 | Team: Security\n\nIssue reported regarding access request impacting enterprise workflow. Technician diagnostics and SLA tracking actively monitored.",
+    "category": "ACCOUNT_ACCESS",
+    "priority": "URGENT",
+    "status": "OPEN",
+    "reportedBy": {
+      "id": 1,
+      "name": "Alice Johnson",
+      "email": "alice@company.com",
+      "role": "EMPLOYEE"
+    },
+    "assignedTo": {
+      "id": 24,
+      "name": "Omar Al-Salem",
+      "email": "omar.al.salem@company.com",
+      "role": "TECHNICIAN"
+    },
+    "createdAt": "2024-05-28T07:17:00Z",
+    "updatedAt": "2024-05-28T07:17:00Z"
+  },
+  {
+    "id": 65,
+    "title": "General Inquiry: Network service outage (Saudi Arabia)",
+    "description": "Channel: Portal | Region: Saudi Arabia | Product Group: Network | Tier: L1 | Team: Security\n\nIssue reported regarding general inquiry impacting enterprise workflow. Technician diagnostics and SLA tracking actively monitored.",
+    "category": "SOFTWARE",
+    "priority": "URGENT",
+    "status": "OPEN",
+    "reportedBy": {
+      "id": 2,
+      "name": "Bob Smith",
+      "email": "bob@company.com",
+      "role": "EMPLOYEE"
+    },
+    "assignedTo": {
+      "id": 21,
+      "name": "Abdullah Al-Rashid",
+      "email": "abdullah.al.rashid@company.com",
+      "role": "TECHNICIAN"
+    },
+    "createdAt": "2024-05-25T14:22:00Z",
+    "updatedAt": "2024-05-25T14:22:00Z"
+  },
+  {
+    "id": 93,
+    "title": "Hardware Failure: Cloud service outage (UAE)",
+    "description": "Channel: Portal | Region: UAE | Product Group: Cloud | Tier: L1 | Team: IT Support\n\nIssue reported regarding hardware failure impacting enterprise workflow. Technician diagnostics and SLA tracking actively monitored.",
+    "category": "HARDWARE",
+    "priority": "URGENT",
+    "status": "CLOSED",
+    "reportedBy": {
+      "id": 1,
+      "name": "Alice Johnson",
+      "email": "alice@company.com",
+      "role": "EMPLOYEE"
+    },
+    "assignedTo": {
+      "id": 9,
+      "name": "Yousef Al-Khalifa",
+      "email": "yousef.al.khalifa@company.com",
+      "role": "TECHNICIAN"
+    },
+    "createdAt": "2024-05-20T13:55:00Z",
+    "updatedAt": "2024-05-20T13:55:00Z"
+  },
+  {
+    "id": 70,
+    "title": "Access Request: Network service outage (Qatar)",
+    "description": "Channel: Phone | Region: Qatar | Product Group: Network | Tier: L2 | Team: IT Support\n\nIssue reported regarding access request impacting enterprise workflow. Technician diagnostics and SLA tracking actively monitored.",
+    "category": "ACCOUNT_ACCESS",
+    "priority": "URGENT",
+    "status": "CLOSED",
+    "reportedBy": {
+      "id": 3,
+      "name": "Carol Davis",
+      "email": "carol@company.com",
+      "role": "EMPLOYEE"
+    },
+    "assignedTo": {
+      "id": 18,
+      "name": "Fahad Al-Rashid",
+      "email": "fahad.al.rashid@company.com",
+      "role": "TECHNICIAN"
+    },
+    "createdAt": "2024-05-20T01:20:00Z",
+    "updatedAt": "2024-05-20T01:20:00Z"
+  },
+  {
+    "id": 41,
+    "title": "Hardware Failure: Software service outage (Kuwait)",
+    "description": "Channel: Chat | Region: Kuwait | Product Group: Software | Tier: L2 | Team: Network Ops\n\nIssue reported regarding hardware failure impacting enterprise workflow. Technician diagnostics and SLA tracking actively monitored.",
+    "category": "HARDWARE",
+    "priority": "URGENT",
+    "status": "RESOLVED",
+    "reportedBy": {
+      "id": 2,
+      "name": "Bob Smith",
+      "email": "bob@company.com",
+      "role": "EMPLOYEE"
+    },
+    "assignedTo": {
+      "id": 23,
+      "name": "Fahad Al-Farsi",
+      "email": "fahad.al.farsi@company.com",
+      "role": "TECHNICIAN"
+    },
+    "createdAt": "2024-05-18T11:06:00Z",
+    "updatedAt": "2024-05-18T11:06:00Z"
+  },
+  {
+    "id": 11,
+    "title": "General Inquiry: Cloud service outage (Qatar)",
+    "description": "Channel: Phone | Region: Qatar | Product Group: Cloud | Tier: L2 | Team: IT Support\n\nIssue reported regarding general inquiry impacting enterprise workflow. Technician diagnostics and SLA tracking actively monitored.",
+    "category": "SOFTWARE",
+    "priority": "URGENT",
+    "status": "CLOSED",
+    "reportedBy": {
+      "id": 3,
+      "name": "Carol Davis",
+      "email": "carol@company.com",
+      "role": "EMPLOYEE"
+    },
+    "assignedTo": {
+      "id": 19,
+      "name": "Ali Al-Khalifa",
+      "email": "ali.al.khalifa@company.com",
+      "role": "TECHNICIAN"
+    },
+    "createdAt": "2024-05-16T01:33:00Z",
+    "updatedAt": "2024-05-16T01:33:00Z"
+  }
+]
